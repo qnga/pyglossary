@@ -36,6 +36,7 @@ def compressionOpen(c: str):
 
 
 class Writer(object):
+	defiFormats = ("H", "h", "m", "b")
 	_compression: str = ""
 
 	def __init__(self, glos: GlossaryType) -> None:
@@ -114,6 +115,8 @@ class Writer(object):
 
 
 class Reader(object):
+	defiFormats = ("H", "h", "m", "b")
+
 	def __init__(self, glos: GlossaryType) -> None:
 		self._glos = glos
 		self._filename = None

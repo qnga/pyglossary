@@ -143,6 +143,8 @@ class Header(object):
 
 
 class Reader(object):
+	defiFormats = ("h", "m")
+
 	# _encoding: str = "utf-8"
 
 	def __init__(self, glos):

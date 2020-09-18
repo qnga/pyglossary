@@ -41,6 +41,7 @@ optionsProp = {
 
 
 class Reader(object):
+	defiFormats = ("H", "m", "b")
 	depends = {
 		"icu": "PyICU",
 	}
@@ -118,7 +119,7 @@ class Reader(object):
 				continue
 			defiFormat = ""
 			if ctype == MIME_HTML:
-				defiFormat = "h"
+				defiFormat = "H"
 			elif ctype == MIME_TEXT:
 				defiFormat = "m"
 
@@ -128,6 +129,7 @@ class Reader(object):
 
 
 class Writer(object):
+	defiFormats = ("H", "m", "b")
 	depends = {
 		"icu": "PyICU",
 	}
@@ -212,19 +214,28 @@ class Writer(object):
 				self.addDataEntry(entry)
 
 			words = entry.l_word
+			entry.detectDefiFormat()
+
+			# FIXME should be done in Glossary class
+			# if entry.defiFormat == "h":
+			# 	entry.convertToFullHTML()
+
 			b_defi = entry.defi.encode("utf-8")
+			if entry.defiFormat == "H":
+				b_defi = b_defi.replace(b'"bword://', b'"')
+				b_defi = b_defi.replace(b"'bword://", b"'")
+				
 			_ctype = content_type
 			if not _ctype:
-				entry.detectDefiFormat()
 				defiFormat = entry.defiFormat
-				if defiFormat == "h":
+				if defiFormat == "H":
 					_ctype = "text/html; charset=utf-8"
-					b_defi = b_defi.replace(b'"bword://', b'"')
-					b_defi = b_defi.replace(b"'bword://", b"'")
 				elif defiFormat == "m":
 					_ctype = "text/plain; charset=utf-8"
 				else:
+					log.warn(f"WARNING: invalid defiFormat={defiFormat}")
 					_ctype = "text/plain; charset=utf-8"
+
 			slobWriter.add(
 				b_defi,
 				*tuple(words),

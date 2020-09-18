@@ -26,6 +26,8 @@ tools = [
 
 
 class Writer(object):
+	defiFormats = ("h", "b")
+
 	_writeInfo: bool = True
 	_newline: bool = "\n"
 	_resources: bool = True

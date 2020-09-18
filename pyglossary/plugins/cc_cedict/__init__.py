@@ -18,6 +18,8 @@ entry_count_reg = re.compile(r"#! entries=(\d+)")
 
 
 class Reader:
+	defiFormats = ("h",)
+
 	depends = {
 		"jinja2": "jinja2",
 	}

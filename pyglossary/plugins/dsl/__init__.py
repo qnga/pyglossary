@@ -316,6 +316,8 @@ def unwrap_quotes(s):
 
 
 class Reader(object):
+	defiFormats = ("h", "m")
+
 	_encoding: str = ""
 	_audio: bool = False
 	_onlyFixMarkUp: bool = False

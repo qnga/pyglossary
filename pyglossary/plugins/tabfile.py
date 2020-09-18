@@ -22,6 +22,8 @@ optionsProp = {
 
 
 class Reader(TextGlossaryReader):
+	defiFormats = ("h", "m", "b")
+
 	def isInfoWord(self, word: str) -> bool:
 		return word.startswith("#")
 
@@ -58,6 +60,8 @@ class Reader(TextGlossaryReader):
 
 
 class Writer(object):
+	defiFormats = ("h", "m", "b")
+
 	_encoding: str = "utf-8"
 	_writeInfo: bool = True
 	_resources: bool = True

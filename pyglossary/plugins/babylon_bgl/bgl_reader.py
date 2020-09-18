@@ -244,6 +244,8 @@ class DefinitionFields(object):
 
 
 class BglReader(object):
+	defiFormats = ("h", "m", "b")
+
 	_defaultEncodingOverwrite = ""
 	_sourceEncodingOverwrite = ""
 	_targetEncodingOverwrite = ""

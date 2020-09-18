@@ -47,6 +47,7 @@ tools = [
 
 
 class Reader(object):
+	defiFormats = ("H", "h", "m", "b")
 	depends = {
 		"libzim": "libzim",
 	}
@@ -141,7 +142,7 @@ class Reader(object):
 			if mimetype == "text/html":
 				defi = b_content.decode("utf-8")
 				defi = defi.replace(' src="../I/', ' src="./')
-				yield glos.newEntry(word, defi, defiFormat="h")
+				yield glos.newEntry(word, defi, defiFormat="H")
 				continue
 
 			if mimetype == "text/plain":

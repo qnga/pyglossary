@@ -37,6 +37,8 @@ def chunkString(string, length):
 
 
 class Writer(object):
+	defiFormats = ("H", "h", "m")
+
 	_encoding: str = "utf-8"
 	_sep: str = os.sep
 	_length: int = 2
@@ -69,6 +71,8 @@ class Writer(object):
 			entry = yield
 			if entry is None:
 				break
+			if entry.isData():
+				continue  # FIXME
 			defi = entry.defi
 			word = entry.s_word
 			if not word:

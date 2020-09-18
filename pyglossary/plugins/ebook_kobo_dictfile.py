@@ -60,6 +60,7 @@ class Reader(TextGlossaryReader):
 	depends = {
 		"mistune": "mistune==2.0.0a5",
 	}
+	defiFormats = ("h", "m")
 
 	_extract_inline_images = True
 
@@ -130,6 +131,8 @@ class Reader(TextGlossaryReader):
 
 
 class Writer(object):
+	defiFormats = ("h", "m")
+
 	_encoding: str = "utf-8"
 
 	def __init__(self, glos: GlossaryType) -> None:

@@ -45,6 +45,8 @@ tools = [
 
 
 class Reader(object):
+	defiFormats = ("h", "m", "b")
+
 	_encoding: str = ""
 	_substyle: bool = True
 

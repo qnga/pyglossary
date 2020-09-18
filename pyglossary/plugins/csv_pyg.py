@@ -55,6 +55,8 @@ optionsProp = {
 
 
 class Reader(object):
+	defiFormats = ("h", "m", "b")
+
 	_encoding: str = "utf-8"
 	_delimiter: str = ","
 
@@ -159,6 +161,8 @@ class Reader(object):
 
 
 class Writer(object):
+	defiFormats = ("h", "m", "b")
+
 	_encoding: str = "utf-8"
 	_resources: bool = True
 	_delimiter: str = ","

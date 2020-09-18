@@ -21,6 +21,8 @@ tools = [
 
 
 class Reader(object):
+	defiFormats = ("h", "m")
+
 	def __init__(self, glos):
 		self._glos = glos
 		self._clear()

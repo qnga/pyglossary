@@ -15,6 +15,8 @@ optionsProp = {
 
 
 class Writer(object):
+	defiFormats = ("h", "m")
+
 	_encoding: str = "utf-8"
 	_writeInfo: bool = True
 	_resources: bool = True

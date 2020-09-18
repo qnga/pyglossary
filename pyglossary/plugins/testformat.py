@@ -12,6 +12,8 @@ optionsProp = {}
 
 
 class Reader(object):
+	defiFormats = ("h", "m")
+
 	def __init__(self, glos: GlossaryType) -> None:
 		self._glos = glos
 		self._filename = ""
@@ -61,6 +63,8 @@ class Reader(object):
 
 
 class Writer(object):
+	defiFormats = ("h", "m")
+
 	def __init__(self, glos: GlossaryType) -> None:
 		self._glos = glos
 		self._filename = None

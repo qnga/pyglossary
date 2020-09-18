@@ -27,6 +27,8 @@ tei = "{http://www.tei-c.org/ns/1.0}"
 
 
 class Reader(object):
+	defiFormats = ("h",)
+
 	depends = {
 		"lxml": "lxml",
 	}
@@ -395,6 +397,7 @@ class Reader(object):
 
 
 class Writer(object):
+	defiFormats = ("h", "m")
 	_resources: bool = True
 
 	def __init__(self, glos: GlossaryType) -> None:

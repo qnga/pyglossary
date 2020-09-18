@@ -22,6 +22,8 @@ tools = [
 
 
 class Writer(object):
+	defiFormats = ("h", "m")
+
 	_remove_html_all: bool = True
 
 	def __init__(self, glos: GlossaryType) -> None:
