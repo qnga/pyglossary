@@ -85,6 +85,21 @@ sortKeyType = Optional[
 """
 
 
+class EntryList(list):
+	def __init__(self):
+		list.__init__(self)
+		self._sortKey = None
+
+	def setSortKey(self, sortKey, sampleItem):
+		self._sortKey = sortKey
+
+	def sort(self):
+		if self._sortKey is None:
+			raise ValueError("EntryList.sort: sortKey is not set")
+
+		list.sort(self, key=self._sortKey)
+
+
 class Glossary(GlossaryType):
 	"""
 	Direct access to glos.data is droped
@@ -356,7 +371,8 @@ class Glossary(GlossaryType):
 				no need to copy OrderedDict instance before passing here
 				we will not reference to it
 		"""
-		self._data = []
+		self._data = EntryList()
+		self.sqlite = False
 		self._rawEntryCompress = True
 		self._cleanupPathList = []
 		self.clear()
@@ -972,10 +988,14 @@ class Glossary(GlossaryType):
 			if cacheSize > 0:
 				self._sortCacheSize = cacheSize  # FIXME
 		else:
+			if self.sqlite:
+				raise TypeError(
+					"self._data is instance of SQList, "
+					"can not use sortWords"
+				)
 			t0 = now()
-			self._data.sort(
-				key=Entry.getRawEntrySortKey(self, key),
-			)
+			self._data.setSortKey(Entry.getRawEntrySortKey(self, key), ["a", "b"])
+			self._data.sort()
 			log.info(f"Sorting took {now() - t0:.1f} seconds")
 		self._sort = True
 		self._updateIter()
@@ -1197,7 +1217,8 @@ class Glossary(GlossaryType):
 					self._sortCacheSize = sortCacheSize  # FIXME
 			else:
 				t0 = now()
-				self._data.sort(key=Entry.getRawEntrySortKey(self, sortKey))
+				self._data.setSortKey(Entry.getRawEntrySortKey(self, sortKey), ["a", "b"])
+				self._data.sort()
 				log.info(f"Sorting took {now() - t0:.1f} seconds")
 
 		self._updateIter()
@@ -1330,6 +1351,7 @@ class Glossary(GlossaryType):
 		sortCacheSize: int = 0,
 		readOptions: "Optional[Dict[str, Any]]" = None,
 		writeOptions: "Optional[Dict[str, Any]]" = None,
+		sqlite: bool = False,
 	) -> "Optional[str]":
 		"""
 		returns absolute path of output file, or None if failed
@@ -1367,6 +1389,22 @@ class Glossary(GlossaryType):
 		if isdir(outputFilename):
 			log.error(f"Directory already exists: {outputFilename}")
 			return
+
+		self.sqlite = sqlite
+		if sqlite:
+			from pyglossary.sqlist import SQList
+			outputPlugin = self.plugins[outputFormat]
+			sqliteSortKey = getattr(outputPlugin.writerClass, "sqliteSortKey", None)
+			if sqliteSortKey:
+				sq_fpath = join(cacheDir, f"{basename(inputFilename)}.db")
+				if isfile(sq_fpath):
+					log.info(f"Removing and re-creating {sq_fpath!r}")
+					os.remove(sq_fpath)
+				self._data = SQList(sq_fpath, sqliteSortKey, persist=True)
+				self._rawEntryCompress = False
+				self._cleanupPathList.append(sq_fpath)
+			else:
+				log.warning(f"{outputFormat} writer does not support sqliteSortKey")
 
 		self.showMemoryUsage()
 

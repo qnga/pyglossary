@@ -457,6 +457,20 @@ class Writer(object):
 	_stardict_client: bool = False
 	_merge_syns: bool = False
 
+	sqliteSortKey = [
+		(
+			"wordlower",
+			"TEXT",
+			lambda x: x[0].lower(),
+		),
+		(
+			"word",
+			"TEXT",
+			lambda x: x[0],
+		),
+		# FIXME: does SQLite sort compares based on text bytes or Unicode?
+	]
+
 	def __init__(self, glos: GlossaryType):
 		self._glos = glos
 		self._filename = None
