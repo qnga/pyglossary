@@ -8,7 +8,7 @@ import re
 import logging
 
 import setuptools
-from setuptools import setup
+from cx_Freeze import setup, Executable
 from setuptools.command.install import install
 
 from pyglossary.glossary import VERSION
@@ -77,6 +77,18 @@ def files(folder):
 with open("README.md", "r", encoding="utf-8") as fh:
 	long_description = fh.read()
 
+# Dependencies are automatically detected, but it might need fine tuning.
+build_exe_options = {
+	"packages": ["os"],
+	"excludes": [],
+}
+
+# GUI applications require a different base on Windows (the default is for a
+# console application).
+base = None
+if sys.platform == "win32":
+    base = "Win32GUI"
+
 setup(
 	name="pyglossary",
 	version=VERSION,
@@ -99,4 +111,8 @@ setup(
 		],
 	},
 	package_data=package_data,
+	options={
+		"build_exe": build_exe_options,
+	},
+	executables=[Executable("pyglossary.pyw", base=base)]
 )
