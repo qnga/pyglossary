@@ -1,42 +1,61 @@
-%global __python /usr/bin/python3
-%{!?python_sitelib: %global python_sitelib %(%{__python} -c "import sys; from distutils.sysconfig import get_python_lib; sys.stdout.write(get_python_lib())")}
+# -*- mode: python ; coding: utf-8 -*-
 
-Name:           pyglossary
-Version:        master
-Release:        1%{?dist}
-Summary:        Working on glossaries (dictionary databases)
+block_cipher = None
 
-Group:          Applications/Productivity
-License:        GPLv3
-URL:            https://github.com/ilius/pyglossary
-Source0:        pyglossary-%{version}.tar.gz
+datas = [
+	("about", "."),
+	("license-dialog", "."),
+	("help", "."),
+	("res/*", "res"),
+	("pyglossary/*.py", "."),
+	("pyglossary/plugins/*", "plugins"),
+	("pyglossary/plugin_lib/*", "plugin_lib"),
+	("pyglossary/langs/*", "langs"),
+	("pyglossary/ui/*.py", "ui"),
+	("pyglossary/ui/progressbar/*.py", "ui/progressbar"),
+	("pyglossary/ui/gtk3_utils/*.py", "ui/gtk3_utils"),
+	("pyglossary/ui/wcwidth/*.py", "ui/wcwidth"),
+	("doc/babylon/*", "doc/babylon"),
+	("doc/non-gui_examples/*", "doc/non-gui_examples"),
+]
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-BuildArch:      noarch
-
-%description
-Working on glossaries (dictionary databases) using python. Including editing
-glossaries and converting theme between many formats such as: Tabfile StarDict
-format xFarDic format "Babylon Builder" source format Omnidic format and etc.
-
-%prep
-%setup -q
-
-%install
-python3 setup.py install --root=%{buildroot} --prefix=%{_prefix}
-
-desktop-file-install --vendor fedora                            \
-        --dir %{buildroot}%{_datadir}/applications              \
-        --delete-original										\
-        %{buildroot}%{_datadir}/applications/pyglossary.desktop
-
-%clean
-rm -rf %{buildroot}
-
-%files
-%{_bindir}/pyglossary
-%{_datadir}/applications/fedora-pyglossary.desktop
-%{_datadir}/pixmaps/pyglossary.png
-%{_datadir}/pyglossary/
-%{_datadir}/doc/pyglossary/
-%{python_sitelib}/pyglossary/*
+a = Analysis(
+	['pyglossary.pyw'],
+	pathex=['D:\\pyglossary'],
+	binaries=[],
+	datas=datas,
+	hiddenimports=[],
+	hookspath=[],
+	runtime_hooks=[],
+	excludes=[],
+	win_no_prefer_redirects=False,
+	win_private_assemblies=False,
+	cipher=block_cipher,
+	noarchive=False,
+)
+pyz = PYZ(
+	a.pure, a.zipped_data,
+	cipher=block_cipher,
+)
+exe = EXE(
+	pyz,
+	a.scripts,
+	[],
+	exclude_binaries=True,
+	name='pyglossary',
+	debug=False,
+	bootloader_ignore_signals=False,
+	strip=False,
+	upx=True,
+	console=True,
+)
+coll = COLLECT(
+	exe,
+	a.binaries,
+	a.zipfiles,
+	a.datas,
+	strip=False,
+	upx=True,
+	upx_exclude=[],
+	name='pyglossary',
+)
